@@ -61,6 +61,7 @@ exec 5<&-
 ```
 
 ## Tools to fetch them (UNIX rules again!)
+Copy the request as curl from the browser
 ``` javascript
 curl 'https://[URL]/DownLoad_Table.asp?Table_ID=272&Has_Group=0&Is_Zipped=0' 
 
@@ -68,8 +69,6 @@ curl 'https://[URL]/DownLoad_Table.asp?Table_ID=272&Has_Group=0&Is_Zipped=0'
    no-cache' 
 -H 'Origin: https://www.transtats.bts.gov' 
 
--H 'Accept-Encoding: 
-    gzip, deflate, br' 
  ... MORE HEADERS!!!
 
 -H 'Referer: 
@@ -96,7 +95,9 @@ curl 'https://[URL]/DownLoad_Table.asp?Table_ID=272&Has_Group=0&Is_Zipped=0'
 
         &VarType=Num&VarDesc=ItinFare&VarType=Num&VarDesc=Distance' --compressed
 ```
-
+~ Slide
+Run it and see the response
+``` javascript
 HTTP/1.1 302 Object moved
 Cache-Control: private
 Content-Length: 196
@@ -106,7 +107,10 @@ Server: Microsoft-IIS/8.5
 X-Powered-By: ASP.NET
 Date: Mon, 13 Mar 2017 04:12:57 GMT
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+```
+~
 
+Automatize
 
 
 
