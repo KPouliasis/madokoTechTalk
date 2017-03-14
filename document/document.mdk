@@ -24,11 +24,11 @@ Beamer Theme  : singapore
 
 ~ Slide 
 ``` javascript
-200418,2004115,1,2004,1,10140,1014001,30140,"ABQ","New Mexico",10397,1039703,30397,"ATL"
-200418,2004116,2,2004,1,10397,1039703,30397,"ATL","Georgia",10140,1014001,30140,"ABQ"
-200419,2004117,1,2004,1,10140,1014001,30140,"ABQ","New Mexico",10693,1069301,30693,"BNA"
-2004110,2004118,1,2004,1,10140,1014001,30140,"ABQ","New Mexico",10693,1069301,30693,"BNA"
-2004110,2004119,2,2004,1,10693,1069301,30693,"BNA","Tennessee",10140,1014001,30140,"ABQ"
+200418,2004115,1,2004,1,10140,1014001,"ABQ","New Mexico",10397,30397,"ATL", ...
+200418,2004116,2,2004,1,10397,1039703,"ATL","Georgia",10140,1014001,30140,"ABQ", ...
+200419,2004117,1,2004,1,10140,1014001,"ABQ","New Mexico",10693,1069301,30693,"BNA", ...
+2004110,2004118,1,2004,1,10140,1014001,"ABQ","New Mexico",10693,1069301,30693,"BNA", ...
+2004110,2004119,2,2004,1,10693,1069301,"BNA","Tennessee",10140,1014001,30140,"ABQ", ...
 ```
 ~
 
@@ -61,7 +61,42 @@ exec 5<&-
 ```
 
 ## Tools to fetch them (UNIX rules again!)
-curl 'https://www.transtats.bts.gov/DownLoad_Table.asp?Table_ID=272&Has_Group=0&Is_Zipped=0' -H 'Pragma: no-cache' -H 'Origin: https://www.transtats.bts.gov' -H 'Accept-Encoding: gzip, deflate, br' -H 'Accept-Language: en-US,en;q=0.8,el;q=0.6,tr;q=0.4' -H 'Upgrade-Insecure-Requests: 1' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/56.0.2924.76 Chrome/56.0.2924.76 Safari/537.36' -H 'Content-Type: application/x-www-form-urlencoded' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8' -H 'Cache-Control: no-cache' -H 'Referer: https://www.transtats.bts.gov/DL_SelectFields.asp?Table_ID=272&DB_Short_Name=Origin%20and%20Destination%20Survey' -H 'Cookie: fsr.s=%7B%22v%22%3A1%2C%22rid%22%3A%22d55c542-103380180-3afa-fcf1-767a9%22%2C%22ru%22%3A%22https%3A%2F%2Fwww.rita.dot.gov%2Fbts%2Fsites%2Frita.dot.gov.bts%2Ffiles%2Fsubject_areas%2Fairline_information%2Findex.html%22%2C%22r%22%3A%22www.rita.dot.gov%22%2C%22st%22%3A%22%22%2C%22to%22%3A3%2C%22c%22%3A%22https%3A%2F%2Fwww.bts.gov%2F%22%2C%22pv%22%3A1%2C%22lc%22%3A%7B%22d0%22%3A%7B%22v%22%3A1%2C%22s%22%3Afalse%7D%7D%2C%22cd%22%3A0%2C%22f%22%3A1489376380315%7D; ASPSESSIONIDSSTSSSTC=HKGFBKKCPABDLDECPADANJFM' -H 'Connection: keep-alive' --data 'UserTableName=DB1BTicket&DBShortName=Origin_and_Destination_Survey&RawDataTable=T_DB1B_TICKET&sqlstr=+SELECT+ORIGIN_AIRPORT_ID%2CORIGIN_AIRPORT_SEQ_ID%2CORIGIN_CITY_MARKET_ID+FROM++T_DB1B_TICKET+WHERE+Quarter+%3D1+AND+YEAR%3D2016&varlist=ORIGIN_AIRPORT_ID%2CORIGIN_AIRPORT_SEQ_ID%2CORIGIN_CITY_MARKET_ID&grouplist=&suml=&sumRegion=&filter1=title%3D&filter2=title%3D&geo=All%A0&time=Q+1&timename=Quarter&GEOGRAPHY=All&XYEAR=2016&FREQUENCY=1&VarDesc=ItinID&VarType=Num&VarDesc=Coupons&VarType=Num&VarDesc=Year&VarType=Num&VarDesc=Quarter&VarType=Num&VarDesc=Origin&VarType=Char&VarName=ORIGIN_AIRPORT_ID&VarDesc=OriginAirportID&VarType=Num&VarName=ORIGIN_AIRPORT_SEQ_ID&VarDesc=OriginAirportSeqID&VarType=Num&VarName=ORIGIN_CITY_MARKET_ID&VarDesc=OriginCityMarketID&VarType=Num&VarDesc=OriginCountry&VarType=Char&VarDesc=OriginStateFips&VarType=Char&VarDesc=OriginState&VarType=Char&VarDesc=OriginStateName&VarType=Char&VarDesc=OriginWac&VarType=Num&VarDesc=RoundTrip&VarType=Num&VarDesc=OnLine&VarType=Num&VarDesc=DollarCred&VarType=Num&VarDesc=FarePerMile&VarType=Num&VarDesc=RPCarrier&VarType=Char&VarDesc=Passengers&VarType=Num&VarDesc=ItinFare&VarType=Num&VarDesc=BulkFare&VarType=Num&VarDesc=Distance&VarType=Num&VarDesc=DistanceGroup&VarType=Num&VarDesc=MilesFlown&VarType=Num&VarDesc=ItinGeoType&VarType=Num' --compressed
+``` javascript
+curl 'https://[URL]/DownLoad_Table.asp?Table_ID=272&Has_Group=0&Is_Zipped=0' 
+
+-H 'Pragma: 
+   no-cache' 
+-H 'Origin: https://www.transtats.bts.gov' 
+
+-H 'Accept-Encoding: 
+    gzip, deflate, br' 
+ ... MORE HEADERS!!!
+
+-H 'Referer: 
+    URL/DL_SelectFields.asp?Table_ID=272&DB_Short_Name=Origin%20and%20Destination%20Survey' 
+
+-H 'Cookie: BLA BLA BLA'
+
+-H 'Connection: keep-alive' 
+--data 'UserTableName=DB1BTicket&DBShortName=Origin_and_Destination_Survey&
+        RawDataTable=T_DB1B_TICKET&sqlstr=+SELECT+ORIGIN_AIRPORT_ID%2
+        CORIGIN_AIRPORT_SEQ_ID%2
+        CORIGIN_CITY_MARKET_ID+FROM++T_DB1B_TICKET+
+        WHERE+Quarter+%3D1+AND+YEAR%3D2016&varlist=ORIGIN_AIRPORT_ID%2CORIGIN_AIRPORT_SEQ_ID%2
+        CORIGIN_CITY_MARKET_ID&grouplist=&suml=&sumRegion=&filter1=title%3D&filter2=title%3D&
+        geo=All%A0&time=Q+1&timename=Quarter&GEOGRAPHY=All
+        &XYEAR=2016&FREQUENCY=1&VarDesc=ItinID&VarType=Num&VarDesc=Coupons&VarType=Num&VarDesc=Year
+        &VarType=Num&VarDesc=Quarter&VarType=Num&VarDesc=Origin&VarType=Char
+        &VarName=ORIGIN_AIRPORT_ID&VarDesc=OriginAirportID&VarType=Num
+        &VarName=ORIGIN_AIRPORT_SEQ_ID
+        &VarDesc=OriginAirportSeqID&VarType=Num
+        &VarName=ORIGIN_CITY_MARKET_ID&VarDesc=OriginCityMarketID
+        &VarType=Num&VarDesc=OriginCountry&VarType=Char
+        &VarDesc=OriginStateFipsBLA BLA BLA BLA BLA bla bla
+
+        &VarType=Num&VarDesc=ItinFare&VarType=Num&VarDesc=Distance' --compressed
+```
+
 HTTP/1.1 302 Object moved
 Cache-Control: private
 Content-Length: 196
