@@ -13,7 +13,7 @@ Beamer Theme  : singapore
 
 [TOC]
 
-# EXAMPLE: Data from RITA
+# CASE: FETCH FLIGHT TICKET DATA FROM TRANSTATS.GOV
 
 
 * [Research and Innovative Technology Administration][rita]:
@@ -60,8 +60,7 @@ done
 exec 5<&-
 ```
 
-## Tools to fetch them (UNIX rules again!)
-Copy the request as curl from the browser
+## Tools to fetch them (bash rules!)
 ``` javascript
 curl 'https://[URL]/DownLoad_Table.asp?Table_ID=272&Has_Group=0&Is_Zipped=0' 
 
@@ -116,7 +115,7 @@ Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 dir=$(dirname $(dirname $(readlink -f "$0")))
 for i in `seq 2004 2015`; do
   for j in `seq 1 4`; do
-     curl  -L 'LINK OF REQUEST'HEADERS , COOKIE, 
+     curl  -L 'LINK OF REQUEST', HEADERS , COOKIE, 
      --data "AS BEFORE WITH  ... T_DB1B_TICKET+WHERE+Quarter+%3D${j}+AND+YEAR%3D${i} ..."
      --compressed -o "$dir/Y${i}_Q${j}/ticket${i}_Q${j}.zip"
 
@@ -130,14 +129,20 @@ DIR=$(dirname $(dirname $(readlink -f "$0")));
 
 echo $DIR;
 for i in `seq 1 4`; do
-        for j in `seq 2004 2015`; do
-                unzip -p "$DIR/Y${j}_Q${i}/ticket*.zip" > "$DIR/Y${j}_Q${i}/ticket${j}_Q${i}.csv" ; sed -i '1d' "$DIR/Y${j}_Q${i}/ticket${j}_Q${i}.csv" ; sed -i 's/,*$//g' "$DIR/Y${j}_Q${i}/ticket${j}_Q${i}.csv"
-        done;
+    for j in `seq 2004 2015`; do
+          unzip -p "$DIR/Y${j}_Q${i}/ticket*.zip" > 
+                   "$DIR/Y${j}_Q${i}/ticket${j}_Q${i}.csv" ;
+          sed '1d' "$DIR/Y${j}_Q${i}/ticket${j}_Q${i}.csv" > 
+                    "$DIR/Y${j}_Q${i}/ticket${j}_Q${i}_Tail.csv"; 
+          sed -i 's/,*$//g' "$DIR/Y${j}_Q${i}/ticket${j}_Q${i}_Tail.csv"
+    done;
 done
 ```
 
 
+## PLAY WITH R
 
+# ORGANIZE IN 
 
 ## Themes {#themes}
 
