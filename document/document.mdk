@@ -1,6 +1,6 @@
 [INCLUDE=presentation]
 Title         : Obtaining and Organizing Big Data 
-Sub Title     : postgres, bash, pg-client and friends
+Sub Title     : bash, postgres and  pg-pool
 Author        : Konstantinos Pouliasis
 Affiliation   : Fullstack Academy
 Email         : konstantinos.pouliasis@gmail.com
@@ -9,11 +9,7 @@ Beamer Theme  : singapore
 
 [TITLE]
 
-# Content
-
-[TOC]
-
-# CASE: FETCH FLIGHT TICKET DATA FROM TRANSTATS.GOV
+# FLIGHT TICKET DATASET 
 
 
 * [Research and Innovative Technology Administration][rita]:
@@ -75,22 +71,16 @@ curl 'https://[URL]/DownLoad_Table.asp?Table_ID=272&Has_Group=0&Is_Zipped=0'
 
 -H 'Cookie: BLA BLA BLA'
 
+
 -H 'Connection: keep-alive' 
 --data 'UserTableName=DB1BTicket&DBShortName=Origin_and_Destination_Survey&
-        RawDataTable=T_DB1B_TICKET&sqlstr=+SELECT+ORIGIN_AIRPORT_ID%2
-        CORIGIN_AIRPORT_SEQ_ID%2
-        CORIGIN_CITY_MARKET_ID+FROM++T_DB1B_TICKET+
+        RawDataTable=T_DB1B_TICKET&sqlstr=+SELECTITIN_ID%2CCOUPONS%2CYEAR%2CQUARTER bla bla+
+        FROM++T_DB1B_TICKET+
         WHERE+Quarter+%3D1+AND+YEAR%3D2016&varlist=ORIGIN_AIRPORT_ID%2CORIGIN_AIRPORT_SEQ_ID%2
-        CORIGIN_CITY_MARKET_ID&grouplist=&suml=&sumRegion=&filter1=title%3D&filter2=title%3D&
-        geo=All%A0&time=Q+1&timename=Quarter&GEOGRAPHY=All
-        &XYEAR=2016&FREQUENCY=1&VarDesc=ItinID&VarType=Num&VarDesc=Coupons&VarType=Num&VarDesc=Year
-        &VarType=Num&VarDesc=Quarter&VarType=Num&VarDesc=Origin&VarType=Char
+       BLA BLA BLA
         &VarName=ORIGIN_AIRPORT_ID&VarDesc=OriginAirportID&VarType=Num
         &VarName=ORIGIN_AIRPORT_SEQ_ID
-        &VarDesc=OriginAirportSeqID&VarType=Num
-        &VarName=ORIGIN_CITY_MARKET_ID&VarDesc=OriginCityMarketID
-        &VarType=Num&VarDesc=OriginCountry&VarType=Char
-        &VarDesc=OriginStateFipsBLA BLA BLA BLA BLA bla bla
+      ...
 
         &VarType=Num&VarDesc=ItinFare&VarType=Num&VarDesc=Distance' --compressed
 ```
@@ -226,104 +216,55 @@ Partition the main table per quarter. I.e. create tables that inherit from the r
       }
     }
 ```
-##CSV VALIDATION (Sketch)
+##CSV VALIDATION AND SEEDING(Sketch)
 * Validations
- ** Are the primary keys actually unique?
- ** Is the `distance_group` column between 1 and 25?
- ** Are boolean fields  boolean?  
-
-## Themes {#themes}
-
-Reveal.js comes with a few themes built in:
-
-* [Default](?#/themes)
-* [Sky](?theme=sky#/themes)
-* [Beige](?theme=beige#/themes)
-* [Serif](?theme=serif#/themes)
-* [Simple](?theme=simple#/themes)
-* [Night](?theme=night#/themes)
-* [Moon](?theme=moon#/themes)
-* [Solarized](?theme=solarized#/themes)
-
-Theme demos are loaded after the presentation which leads to flicker. In
-production you should load your theme in the `<head>` using a
-`<link>`.
-
-## Transitions { #transitions }
-
-You can select from different transitions, like:\
-[Cube](?transition=cube#/transitions) -
-[Page](?transition=page#/transitions) -
-[Concave](?transition=concave#/transitions) -
-[Zoom](?transition=zoom#/transitions) -
-[Linear](?transition=linear#/transitions) -
-[Fade](?transition=fade#/transitions) -
-[None](?transition=none#/transitions) -
-[Default](?#/transitions)
+ * Are the primary keys actually unique?
+ * Is the `distance_group` column between 1 and 25?
+ * Are boolean fields  boolean?
+* Strategy
+ * instead of parsing huge CSVs just use portgres!
+ * create a temporary table 'RAW_TICKET_QY_YDDDD' for each quarter
+ * validate as you insert from the CSV
+ * copy the temporary into 'MARKET_TICKET' and do type casting to save space 
 
 
+## INSERT DATA
+* _pg-pool_ library is awesome!
+* permits for multiple threads/ connections to postgres
+* plays well with partitioning
+* uses __co__-functions and __yield__ to make asynchronous code feel sequential
+* You can write _for loops_ when _for loops_ feel right!
 
-## Pauses?
+## CODE SAMPLE
+```javascript
+let quarterProcess = co.wrap(function *(year, quarter, client) {
+  try {
+    yield client.query(DROP_AND_CREATE_RAW_TICKET_MARKET_COUPON(year, quarter))
+    yield client.query(SEED_RAW_TICKET_FROM_CSV(year, quarter))
+    yield client.query(INSERT_INTO_MARKET_TICKET(year, quarter))
+  } catch (e) {
+      console.error(e.message, e.stack)
+      throw Error(e)
+  }
+})
 
-Some pauses.
+co(function *() {
 
-* {.fragment} One
-* {.fragment} Two
-* {.fragment} Three
-
-And more:
-
-- Test 1
-- Test 2
-- Test 3
-{.fragmented}
-
-Cool!.
-
-~ Slide
-A slide with no header
-~
-
-
-## Point of View
-
-In Reveal.js Press **ESC** to enter the slide overview.
-
-Hold down alt and click on any element to zoom in on it using 
- [zoom.js]. Alt + click anywhere to zoom back out.
-
-
-[zoom.js]: http://lab.hakim.se/zoom-js
-
-
-## Works in Mobile Safari
-
-Try it out! You can swipe through the slides and pinch your way to the
-overview.
-
-
-## Printing
-
-You can print a `revealjs` presentation nicely from the browser.
-
-First give the `?print-pdf` or `?print-paper` query on your final
-presentation (in the browser address bar) and then print from the Chrome
-browser selecting `Save to PDF`.
-
-Read more about it at the [revealjs documentation](https://github.com/hakimel/reveal.js#pdf-export)
-
-## RevealJS library
-
-Normally, the `revealjs` library is loaded from a CDN but you can specify your
-own url using metadata:
-
-    Reveal Url: <my url>
-
-This can be useful when using a [server to run revealjs](https://github.com/hakimel/reveal.js#full-setup)
-where you may use something like:
-
-    @nopreview Reveal Url: http://localhost:8000/reveal.js
-
+  yield require('./createMarketTicketPartition')
+  let clients = yield ([1, 2, 3, 4].map(() => co( function *() {
+    return yield pool.connect()
+  })))
+  for (let year = 2007; year < 2016; year++) {
+    yield [1, 2, 3, 4].map((quarter) => (
+      quarterProcess(year, quarter, clients[quarter - 1])
+    ))
+  }
+  yield clients.map((client) => client.release())
+})
+.then(() => {console.log('done'); return pool.end()})
+.then(() => {console.log('Successfully closed Connection')})
+.catch(err => {console.error(err.message, err.stack); pool.end()})
+```
 
 ## Thanks for looking :-)
 
