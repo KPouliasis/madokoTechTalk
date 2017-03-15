@@ -53,6 +53,7 @@ while   read line1 <&5 ; do
 	       echo "$line3" ;
 	       echo "$line4";
          echo "$line5"; 
+         echo "$line5"; 
 done
 
 # Close file handle 5
