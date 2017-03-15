@@ -35,10 +35,6 @@ Beamer Theme  : singapore
 * Write a script that reads from a buffer five lines at a time 
 * Turn it to an executable with **chmod + x **
 
-* Write a script that reads from a buffer five lines at a time
-* Turn it to an executable with **chmod + x**
-<!-- end merge -->
-
 
 ``` javascript
 #!/bin/bash
