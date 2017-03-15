@@ -142,8 +142,41 @@ done
 
 ## PLAY WITH R
 
-# ORGANIZE IN 
+# ORGANIZE IN A POSTGRES DB
+## DB DESIGN  
+* One big table for all tickets is not a great idea -indexes become very large
+* Data are partitioned by nature
+* use postgres partitioning
 
+##DB DESIGN
+Create router table (in psql or using a pg library)
+```javascript
+CREATE TABLE  IF NOT EXISTS market_ticket (
+      ITIN_ID         char(20),
+      MKT_ID            char(23) PRIMARY KEY,
+      MARKET_COUPONS	    int,
+      ITIN_YEAR	    int,
+      ITIN_QUARTER         smallint, CHECK(itin_quarter > 0 and itin_quarter< 5),
+      ORIGIN_AIRPORT_ID        int,
+      ORIGIN_AIRPORT_SEQ_ID        int,
+      ... ... 
+      PASSENGERS     int,
+      market_fare    float,
+      DISTANCE_GROUP smallint, check (distance_group > 0 and distance_group < 26),
+      MARKET_MILES_FLOWN float
+```
+##DB DESIGN
+Partition the main table per quarter. I.e. tables that inherit from that base 
+```javascript
+  for (let year = 2004; year < 2016; year++){
+      for (let quarter = 1; quarter < 5; quarter++){
+        yield client1.query(`CREATE TABLE IF NOT EXISTS market_quarter_ticket_y${year}_q${quarter}
+          ( CHECK (itin_year = ${year} AND itin_quarter = ${quarter}) ) INHERITS (market_ticket);
+        CREATE unique INDEX IF NOT EXISTS market_quarter_ticket_y${year}_q${quarter}_idx 
+        ON market_quarter_ticket_y${year}_q${quarter} (MKT_ID);`)
+      }
+    }
+```
 ## Themes {#themes}
 
 Reveal.js comes with a few themes built in:
