@@ -173,29 +173,47 @@ Partition the main table per quarter. I.e. tables that inherit from that base
         yield client1.query(
           `CREATE TABLE IF NOT EXISTS 
             market_quarter_ticket_y${year}_q${quarter}
-            (CHECK (itin_year = ${year} AND itin_quarter = ${quarter}) ) 
-          INHERITS (market_ticket);
-          //ADD A)
+             (CHECK (itin_year = ${year} AND itin_quarter = ${quarter})) 
+           INHERITS (market_ticket);)
+          //ADD ANY INDEX YOU WANT PER PARTITION!
       }
     }
 ```
-##DB DESIGN
-Create router table (in psql or using a pg library)
+##MAKE BASE TABLE VIRTUAL
+ * Ensure that each insertion in MARKET_TICKET ends up in a MARKET_QUARTER_TICKET
+with a trigger. 
+
+Read _new_ as a kind of _this_
+
 ```javascript
-CREATE TABLE  IF NOT EXISTS market_ticket (
-      ITIN_ID         char(20),
-      MKT_ID            char(23) PRIMARY KEY,
-      MARKET_COUPONS	    int,
-      ITIN_YEAR	    int,
-      ITIN_QUARTER         smallint, CHECK(itin_quarter > 0 and itin_quarter< 5),
-      ORIGIN_AIRPORT_ID        int,
-      ORIGIN_AIRPORT_SEQ_ID        int,
-      ... ... 
-      PASSENGERS     int,
-      market_fare    float,
-      DISTANCE_GROUP smallint, check (distance_group > 0 and distance_group < 26),
-      MARKET_MILES_FLOWN float
+CREATE OR REPLACE FUNCTION market_ticket_insert_trigger()
+    RETURNS trigger AS $$
+    begin
+    execute format ('INSERT INTO market_quarter_ticket_y%s_q%s
+    VALUES (%L, %L, %L, %L, %L, %L, %L, %L, %L, %L, %L,%L, %L,%L, %L, %L, %L,
+    %L, %L, %L, %L, %L, %L, %L, %L, %L, %L,%L, %L,%L);',
+    new.itin_year, new.itin_quarter, new.itin_id,
+    new.MKT_ID, new.MARKET_COUPONS, new.ITIN_YEAR,
+    new.itin_QUARTER, new.ORIGIN_AIRPORT_ID,
+    new.ORIGIN_AIRPORT_SEQ_ID,
+    new.ORIGIN_CITY_MARKET_ID,
+    new.origin,
+    new.ORIGIN_STATE_NM,
+    new.DEST_AIRPORT_ID,
+    ...
+    ...;
+    return null;
+    END;
 ```
+##MAKE BASE TABLE VIRTUAL
+* Override  insertion on the base table with the  trigger/ hook
+```javascript
+  yield client1.query(
+    `CREATE TRIGGER insert_market_ticket_trigger 
+     BEFORE INSERT on MARKET_TICKET FOR  EACH ROW EXECUTE PROCEDURE market_ticket_insert_trigger();
+  ```
+
+
 ##DB DESIGN
 Partition the main table per quarter. I.e. create tables that inherit from the router table but are mutually exclusive data sets.
 ```javascript
@@ -208,7 +226,11 @@ Partition the main table per quarter. I.e. create tables that inherit from the r
       }
     }
 ```
-
+##CSV VALIDATION (Sketch)
+* Validations
+ ** Are the primary keys actually unique?
+ ** Is the `distance_group` column between 1 and 25?
+ ** Are boolean fields  boolean?  
 
 ## Themes {#themes}
 
