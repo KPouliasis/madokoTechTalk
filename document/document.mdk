@@ -273,5 +273,7 @@ co(function *() {
  is impossible - lists instead of streams
 * Pagination with offset is unstable for large tables
 * Workarounds are possible but  still very slow. 
+* You can still generate models after the data processing phase
+* Even automatically with __sequelize-auto__
 
 ## Thanks for your time :-)
