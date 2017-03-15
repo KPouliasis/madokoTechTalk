@@ -31,17 +31,11 @@ Beamer Theme  : singapore
 ~
 
 ## Tools to peek them (UNIX rules!)
-<!-- begin merge (remove this line to resolve the conflict) -->
-~ Begin Remote
 * Write a script that reads from a buffer five lines at a time 
 * Turn it to an executable with **chmod + x **
 * Or use the instruction **head**
 
-~ End Remote
-* Write a script that reads from a buffer five lines at a time
-* Turn it to an executable with **chmod + x**
-Or use the instruction **head**
-<!-- end merge -->
+
 
 ``` javascript
 #!/bin/bash
@@ -50,7 +44,7 @@ exec 5<  $1
 
 
 # Now you can use "<&5" to read from this file
-while read line1 <&5 ; do
+while   read line1 <&5 ; do
         read line2 <&5
         read line3 <&5
         read line4 <&5
