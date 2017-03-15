@@ -230,7 +230,7 @@ CREATE OR REPLACE FUNCTION market_ticket_insert_trigger()
  * copy the temporary into 'MARKET_TICKET' and do type casting to save space 
 
 
-## INSERT DATA
+## INSERT DATA IN PARALLEL
 * _pg-pool_ library is awesome!
 * permits for multiple threads/ connections to postgres
 * plays well with partitioning
