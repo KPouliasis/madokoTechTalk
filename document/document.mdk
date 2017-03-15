@@ -44,16 +44,16 @@ exec 5<  $1
 
 # Now you can use "<&5" to read from this file
 while   read line1 <&5 ; do
-        read line2 <&5
-        read line3 <&5
-        read line4 <&5
-	      read line5 <&5
-        echo "$line1"
-	      echo "$line2" 
-	      echo "$line3"
-	      echo  "$line4" 
-        echo "$line5" 
-	      read stdin
+         read line2 <&5;
+         read line3 <&5;
+         read line4 <&5;
+	       read line5 <&5;
+         echo "$line1";
+	       echo "$line2" ;
+	       echo "$line3" ;
+	       echo "$line4";
+         echo "$line5"; 
+	       read stdin;
 done
 
 # Close file handle 5
