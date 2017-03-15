@@ -116,7 +116,7 @@ Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 dir=$(dirname $(dirname $(readlink -f "$0")))
 for i in `seq 2004 2015`; do
   for j in `seq 1 4`; do
-     curl  -L 'https://www.transtats.bts.gov/DownLoad_Table.asp?Table_ID=272&Has_Group=0&Is_Zipped=0' HEADERS , COOKIE, 
+     curl  -L 'LINK OF REQUEST'HEADERS , COOKIE, 
      --data "AS BEFORE WITH  ... T_DB1B_TICKET+WHERE+Quarter+%3D${j}+AND+YEAR%3D${i} ..."
      --compressed -o "$dir/Y${i}_Q${j}/ticket${i}_Q${j}.zip"
 
