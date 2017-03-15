@@ -13,18 +13,20 @@ Beamer Theme  : singapore
 
 
 * [Research and Innovative Technology Administration][rita]:
-  Provides CSV files with historical data on flight tickets from the last 20 years organized quarterly
- * Each of them can be around 5 gigabytes
+  Provides CSV files with historical data on flight tickets from the last 15 years organized quarterly
+ * Each quarter entries around 7 GB ~ 30 GB per year
  * A total of more than 700 million records
 [rita]:https://www.rita.dot.gov/bts/sites/rita.dot.gov.bts/files/subject_areas/airline_information/index.html
+
+
 
 ~ Slide 
 ``` javascript
 200418,2004115,1,2004,1,10140,1014001,"ABQ","New Mexico",10397,30397,"ATL", ...
-200418,2004116,2,2004,1,10397,1039703,"ATL","Georgia",10140,1014001,30140,"ABQ", ...
-200419,2004117,1,2004,1,10140,1014001,"ABQ","New Mexico",10693,1069301,30693,"BNA", ...
-2004110,2004118,1,2004,1,10140,1014001,"ABQ","New Mexico",10693,1069301,30693,"BNA", ...
-2004110,2004119,2,2004,1,10693,1069301,"BNA","Tennessee",10140,1014001,30140,"ABQ", ...
+200418,2004116,2,2004,1,10397,1039703,"ATL","Georgia",10140,1014001,30140,"ABQ", 
+200419,2004117,1,2004,1,10140,1014001,"ABQ","New Mexico",10693,1069301,30693,"BNA"
+2004110,2004118,1,2004,1,10140,1014001,"ABQ","New Mexico",10693,1069301,30693,"BNA"
+2004110,2004119,2,2004,1,10693,1069301,"BNA","Tennessee",10140,1014001,30140,"ABQ"
 ```
 ~
 
@@ -113,7 +115,8 @@ dir=$(dirname $(dirname $(readlink -f "$0")))
 for i in `seq 2004 2015`; do
   for j in `seq 1 4`; do
      curl  -L HEADERS , COOKIE, 
-     --data "AS BEFORE WITH  ... T_DB1B_TICKET+WHERE+Quarter+%3D${j}+AND+YEAR%3D${i} ..."
+     --data 
+     "AS BEFORE WITH  ... T_DB1B_TICKET+WHERE+Quarter+%3D${j}+AND+YEAR%3D${i} ..."
      --compressed -o "$dir/Y${i}_Q${j}/ticket${i}_Q${j}.zip"
 
 
@@ -265,14 +268,10 @@ co(function *() {
 .catch(err => {console.error(err.message, err.stack); pool.end()})
 ```
 ## What's wrong with sequelize
-* Paritioning is new and hence ... good luck with documentation
-* Doing __findall__ in a 5GB table (e.g. copy Raw_ticket to market_ticket)
+* Partitioning is new and ... good luck with documentation
+* Doing __findAll__ in a 5GB table (e.g. copy Raw_ticket to market_ticket)
  is impossible - lists instead of streams
 * Pagination with offset is unstable for large tables
-* Even with work arounds it is very slow. 
+* Workarounds are possible but  still very slow. 
 
-## Thanks for looking :-)
-
-[slide]: http://research.microsoft.com/en-us/um/people/daan/madoko/samples/slidedemo/out/slidedemo.html
-[slide-mdk]: https://www.madoko.net/editor.html?#url=http://research.microsoft.com/en-us/um/people/daan/madoko/samples/slidedemo/slidedemo.mdk&options={"delayedUpdate":"true"}
-[slide-pdf]: http://research.microsoft.com/en-us/um/people/daan/madoko/samples/slidedemo/out/slidedemo.pdf
+## Thanks for your time :-)
